@@ -10,9 +10,22 @@ class CSVFileController extends Controller
     {
         $filename = 'CSVFile'.time();
         $path = $request->file('myFile')->storeAs('myFiles', $filename);
-        $csv = fgetcsv(fopen('../storage/app/myFiles/'.$filename,'r'));
-        dd($csv);
-        fclose($csv);
-        dd($path);
+        $file = fopen('../storage/app/myFiles/'.$filename,'r');
+        $table = array();
+        while(!feof($file)) {
+            array_push($table, (fgetcsv($file)));
+        }
+        fclose($file);
+        $headers = array();
+        $rows = array();
+        foreach($table as $key => $row){
+            if($key == 0) {
+                array_push($headers, $row);
+            } else {
+                array_push($rows, $row);
+            }
+        }
+        return view('welcome', ['headers' => $headers], ['rows' => $rows]);
+        dd($table);
     }
 }
