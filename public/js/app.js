@@ -1960,10 +1960,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["subjects", "messages"],
   mounted: function mounted() {
-    console.log(this.subjects, this.messages);
+    this.subjects = JSON.parse(this.subjects);
+    this.messages = JSON.parse(this.messages);
   }
 });
 
@@ -38287,40 +38292,59 @@ var render = function() {
       _c(
         "v-container",
         [
-          _c("v-simple-table", [
-            _c("thead", [
-              _c("tr", [
-                _c("th", [_vm._v("Subjects")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Messages")])
-              ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.subjects, function(subject, i) {
-                return _c(
-                  "div",
-                  { key: i },
-                  _vm._l(subject, function(item, index) {
-                    return _c("tr", { key: index }, [
-                      _c("td", [_vm._v(" " + _vm._s(item))]),
+          _c(
+            "v-row",
+            { attrs: { justify: "center" } },
+            [
+              _c(
+                "v-col",
+                { attrs: { cols: "12", md: "10" } },
+                [
+                  _c(
+                    "v-card",
+                    { attrs: { elevation: "12" } },
+                    [
+                      _c("v-card-title", { attrs: { justify: "center" } }, [
+                        _vm._v(" Table of Contents ")
+                      ]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(" " + _vm._s(_vm.messages[i][index]))])
-                    ])
-                  }),
-                  0
-                )
-              }),
-              0
-            )
-          ]),
-          _vm._v(
-            "\n    " +
-              _vm._s(_vm.subjects) +
-              "\n    " +
-              _vm._s(_vm.messages) +
-              "\n  "
+                      _c(
+                        "v-simple-table",
+                        [
+                          _c("thead", [
+                            _c("tr", [
+                              _c("th", [_vm._v("Subjects")]),
+                              _vm._v(" "),
+                              _c("th", [_vm._v("Messages")])
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _vm._l(_vm.subjects, function(subject, index) {
+                            return _c(
+                              "tbody",
+                              _vm._l(subject, function(item, i) {
+                                return _c("tr", [
+                                  _c("td", [_vm._v(_vm._s(item))]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(_vm._s(_vm.messages[index][i]))
+                                  ])
+                                ])
+                              }),
+                              0
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
           )
         ],
         1
