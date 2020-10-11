@@ -60,7 +60,7 @@ class CSVFileController extends Controller
                     foreach($rows as $keyRow => $row) {
                         foreach($row as $keyCol => $col) {
                             if($keyCol == $keyHeader) {
-                                array_push($foundEachField, self::putContenToTemplate($field, $col));
+                                array_push($foundEachField, self::putContentToTemplate($field, $col));
                             }
                         }
                     }
@@ -80,7 +80,7 @@ class CSVFileController extends Controller
     /**
      * @return string string[0] . $content . string[1]
      */
-    public function putContenToTemplate($string, $content) {
+    public function putContentToTemplate($string, $content) {
         return implode( array(explode('{{', $string)[0], $content, explode('}}', $string)[1])); 
     }
     /**

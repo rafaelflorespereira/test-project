@@ -5,8 +5,10 @@
         <v-text-field
           name="subject[]"
           label="Subject"
-          placeholder="Subject + Header"
+          placeholder="Subject with Header"
           outlined
+
+          required
         ></v-text-field>
       </v-col>
     </v-row>
@@ -17,7 +19,8 @@
           label="Message"
           outlined
           auto-grow 
-          placeholder="Message + Header"
+          placeholder="Message with Header"
+          required
         ></v-textarea>
       </v-col>
     </v-row>
@@ -25,11 +28,26 @@
 </template>
 
 <script>
+import { validationMixin } from 'vuelidate'
+import { required } from 'vuelidate/lib/validators'
 export default {
+  mixins: [validationMixin],
 
+  validations: {
+    subject: { required }
+  },
+  data: () => {
+    return {
+      
+    }
+  },
+  computed: {
+/*     subjectErrors(){
+      const errors = []
+        if (!this.$v.subject.$dirty) return errors
+        !this.$v.subject.required && errors.push('Subject is required')
+      return errors
+    } */
+  }
 }
 </script>
-
-<style>
-
-</style>
