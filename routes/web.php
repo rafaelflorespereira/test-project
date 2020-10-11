@@ -17,4 +17,4 @@ Route::get('/', function () {
     return view('project');
 });
 
-Route::post('/test-table', 'CSVFileController@readFile')->name('readFile');
+Route::post('/test-table', 'CSVFileController@storeFile')->name('storeFile');

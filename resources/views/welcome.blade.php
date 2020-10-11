@@ -12,24 +12,32 @@
         <!-- Styles -->  
     </head>
     <body>
-        <table>
+        <table style="width:100%">
             <tr>
-                @foreach ($headers as $header)
-                    @foreach ($header as $item)
-                        <th>{{$item}}</th>
-                    @endforeach
-                @endforeach
+                <th>Subjects: </th>
+                <th>Messages: </th>
             </tr>
-            @foreach ($rows as $row)
+            @foreach ($subjects as $key => $subject)
+            @if (is_array($subject))
+            @foreach ($subject as $i => $item)
                 <tr>
-                    @if (is_array($row))
-                        @foreach ($row as $key => $col)
-                            {{-- @dd($row, $col, $key) --}}
-                            <td>{{$col ?? '' }}</td>
-                        @endforeach
-                    @endif
+                    <td> {{ $item }}</td>
+                    <td> {{ $messages[$key][$i] }} </td>
                 </tr>
+                @endforeach
+                @endif
             @endforeach
+        
         </table>
     </body>
+    <style>
+        table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;    
+}
+    </style>
 </html>
