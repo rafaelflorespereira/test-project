@@ -4,39 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>The Rabbit Test</title>
+    <script src="{{ asset('js/app.js') }}" defer></script>
+    <link href="{{asset('css/app.css')}}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
 </head>
 <body>
-    <form action="{{ route('storeFile') }}" enctype="multipart/form-data" method="POST">
-        <div>
-            <label for="myFile">Select a CSV file:</label>
-            <input type="file" id="myFile" name="myFile">
-
-            {{-- the template must be in here --}}
-            <div>
-
-                <label for="subject">1 - Input a subject:</label>
-                <input type="text" id="subject" name="subject[]">
-            </div>
-            <div>
-
-                <label for="message1">1 - Input a message:</label>
-                <textarea name="message[]" id="message1" cols="30" rows="10"></textarea>
-            </div>
-            <br>
-            <div>
-
-                <label for="subject2">2 - Input a subject:</label>
-                <input type="text" id="subject2" name="subject[]">
-            </div>
-            <div>
-
-                <label for="message2">2 - Input a message:</label>
-                <textarea name="message[]" id="message2" cols="30" rows="10"></textarea>
-            </div>
-        </div>
-        <button type="submit">Enviar</button>
-        {{ csrf_field()  }}
-    </form>
+    <div id="app">
+        <my-app></my-app>
+    </div>
 </body>
 </html>

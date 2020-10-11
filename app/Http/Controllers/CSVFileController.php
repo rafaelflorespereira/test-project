@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 class CSVFileController extends Controller
 {
+    /**
+     * Saves the file into store/app/myFiles
+     */
     public function storeFile(Request $request) {
         $filename = 'CSVFile'.time();
         $path = $request->file('myFile')->storeAs('myFiles', $filename);
@@ -38,9 +41,9 @@ class CSVFileController extends Controller
     }
 
     /**
-     * Find which Header the interpolated Strings matches
-     * then, get the content from the row from the Header Index.
-     * also, add the message back with the content from the CSV File.
+     * Find which Header the interpolated Strings matches,
+     * then get the content from the row from the Header Index.
+     * Also, add the message back with the content from the CSV File.
      * @param array fields(Subjects and Messages)
      * @param array headers(CSV Header)
      * @param array rows(CSV content)
@@ -80,6 +83,9 @@ class CSVFileController extends Controller
     public function putContenToTemplate($string, $content) {
         return implode( array(explode('{{', $string)[0], $content, explode('}}', $string)[1])); 
     }
-
+    /**
+     * If template returns empty for its table fields,
+     * returns the previous template. 
+     */
     public function findBlank() {}
 }
