@@ -2139,10 +2139,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['error'],
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
   validations: {
     file: {
@@ -2159,7 +2185,8 @@ __webpack_require__.r(__webpack_exports__);
       firstNameExample: 'For example: His first name is: {{ First Name }}',
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       valid: true,
-      file: null
+      file: null,
+      dialog: false
     };
   },
   computed: {
@@ -2182,6 +2209,9 @@ __webpack_require__.r(__webpack_exports__);
     subtractTemplate: function subtractTemplate() {
       if (this.template > 1) this.template -= 1;
     }
+  },
+  created: function created() {
+    if (this.error) this.dialog = true;
   }
 });
 
@@ -38754,6 +38784,57 @@ var render = function() {
                           )
                         ],
                         2
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-dialog",
+            {
+              attrs: { "max-width": "290" },
+              model: {
+                value: _vm.dialog,
+                callback: function($$v) {
+                  _vm.dialog = $$v
+                },
+                expression: "dialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", { staticClass: "headline" }, [
+                    _vm._v("\n      Form fill Error!\n      ")
+                  ]),
+                  _vm._v(" "),
+                  _c("v-card-text", [
+                    _vm._v(
+                      "\n        All the contents need to be filled before sending the form\n      "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { text: "", tile: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("\n            Ok\n          ")]
                       )
                     ],
                     1

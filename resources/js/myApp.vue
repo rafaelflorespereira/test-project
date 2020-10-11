@@ -79,6 +79,31 @@
           </v-row>
         </v-card>
       </v-form>
+
+      <!-- !FORM ERROR DIALOG -->
+      <v-dialog
+        v-model="dialog"
+        max-width="290"
+      >
+      <v-card>
+
+      <v-card-title class="headline">
+        Form fill Error!
+        </v-card-title>
+        <v-card-text>
+          All the contents need to be filled before sending the form
+        </v-card-text>
+          <v-card-actions>
+            <v-btn
+              text
+              tile
+              @click="dialog = false"
+            >
+              Ok
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
   </v-app>
 </template>
@@ -88,6 +113,7 @@ import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import template from './components/TemplateComponent.vue'
   export default {
+    props: ['error'],
     mixins: [validationMixin],
     validations: {
       file: {required}
@@ -101,7 +127,8 @@ import template from './components/TemplateComponent.vue'
       firstNameExample: 'For example: His first name is: {{ First Name }}',
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       valid: true,
-      file: null
+      file: null,
+      dialog: false
     }),
     computed: {
       fileErrors() {
@@ -123,6 +150,9 @@ import template from './components/TemplateComponent.vue'
       subtractTemplate() {
         if (this.template > 1 ) this.template -= 1
       }
+    },
+    created() {
+      if(this.error) this.dialog = true
     }
   }
 </script>

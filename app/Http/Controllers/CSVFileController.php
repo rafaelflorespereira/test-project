@@ -10,6 +10,9 @@ class CSVFileController extends Controller
      * Saves the file into store/app/myFiles
      */
     public function storeFile(Request $request) {
+        if(isset($request->file) or $request->message or $request->subject) {
+            return redirect('/')->with(['error' => 'Please, fill the form correctly']);
+        }
         $filename = 'CSVFile'.time();
         $path = $request->file('myFile')->storeAs('myFiles', $filename);
         return self::readFile($filename, $request->subject, $request->message);
@@ -37,7 +40,7 @@ class CSVFileController extends Controller
         }
         $foundSubjects = self::getFieldsFromRows($subjects, $rows, $headers);
         $foundMessages = self::getFieldsFromRows($messages, $rows, $headers);
-        return view('welcome', ['subjects' => $foundSubjects], ['messages' => $foundMessages]);
+        return view('table', ['subjects' => $foundSubjects], ['messages' => $foundMessages]);
     }
 
     /**
