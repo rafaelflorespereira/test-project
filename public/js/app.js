@@ -1964,11 +1964,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["subjects", "messages"],
   mounted: function mounted() {
     this.subjects = JSON.parse(this.subjects);
     this.messages = JSON.parse(this.messages);
+  },
+  data: function data() {
+    return {
+      message: 'test-message',
+      subject: 'test-subject'
+    };
+  },
+  methods: {
+    sendMail: function sendMail() {
+      window.location.href = '/send-mail/' + this.subject + '/' + this.message;
+    }
   }
 });
 
@@ -1983,10 +1997,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate */ "./node_modules/vuelidate/lib/index.js");
-/* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
 //
 //
 //
@@ -2016,27 +2026,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
-  validations: {
-    subject: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"]
-    }
-  },
-  data: function data() {
-    return {};
-  },
-  computed: {
-    /*     subjectErrors(){
-          const errors = []
-            if (!this.$v.subject.$dirty) return errors
-            !this.$v.subject.required && errors.push('Subject is required')
-          return errors
-        } */
-  }
-});
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 
@@ -38468,6 +38458,18 @@ var render = function() {
                   )
                 ],
                 1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-row",
+            [
+              _c(
+                "v-btn",
+                { attrs: { color: "success" }, on: { click: _vm.sendMail } },
+                [_vm._v("Send Email")]
               )
             ],
             1

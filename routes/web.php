@@ -1,5 +1,5 @@
 <?php
-
+use App\Mail\SubjectMessage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,3 +18,9 @@ Route::get('/', function () {
 });
 
 Route::post('/test-table', 'CSVFileController@storeFile')->name('storeFile');
+
+// Route for e-mail
+Route::get('send-mail/{subject}/{message}', function($subject, $message) {
+    Mail::to('scv@example.com')->send(new SubjectMessage($subject, $message));
+    return redirect('/')->with(['email' => 'e-mail sent']);
+});

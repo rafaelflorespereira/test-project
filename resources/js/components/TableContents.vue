@@ -23,6 +23,9 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-row>
+        <v-btn @click="sendMail" color="success">Send Email</v-btn>
+      </v-row>
     </v-container>
   </v-app>
 </template>
@@ -33,6 +36,17 @@ export default {
     mounted(){
     this.subjects = JSON.parse(this.subjects)
     this.messages = JSON.parse(this.messages)
+  },
+  data:() => {
+    return {
+      message: 'test-message',
+      subject: 'test-subject'
+    }
+  },
+  methods: {
+    sendMail() {
+      window.location.href = '/send-mail/'+this.subject+'/'+this.message
+    }
   }
 }
 </script>
