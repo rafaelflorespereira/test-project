@@ -5,9 +5,9 @@ This is an email to include the SCV file content.
 
 @component('mail::table')
 
-| Subject    |  Message  |
-|:----------:|:---------:|
-| $subject   |  $message |
+| Subject          |        Message  |
+|:----------------:|:---------------:|
+| {{$mail['subject']}}   |  {{$mail['message']}} |
   
 @endcomponent
 

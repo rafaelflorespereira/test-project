@@ -11,20 +11,36 @@
                 <tr>
                   <th>Subjects</th>
                   <th>Messages</th>
+                  <th>Send Email</th>
                 </tr>
               </thead>
               <tbody v-for="(subject, index) in subjects">
                 <tr v-for="(item, i) in subject">
                   <td>{{ item }}</td>
                   <td>{{ messages[index][i] }}</td>
+                  <td>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn 
+                        icon
+                        color="green"                
+                        v-on="on"
+                        v-bind="attrs" 
+                        @click="sendMail(item, messages[index][i])"
+                      >
+                        <v-icon>
+                          mdi-email-send-outline
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Forward e-mail</span>
+                  </v-tooltip>
+                  </td>
                 </tr>
               </tbody>
             </v-simple-table>
           </v-card>
         </v-col>
-      </v-row>
-      <v-row>
-        <v-btn @click="sendMail" color="success">Send Email</v-btn>
       </v-row>
     </v-container>
   </v-app>
@@ -44,8 +60,8 @@ export default {
     }
   },
   methods: {
-    sendMail() {
-      window.location.href = '/send-mail/'+this.subject+'/'+this.message
+    sendMail(subject, message) {
+      window.location.href = '/send-mail/'+subject+'/'+message
     }
   }
 }

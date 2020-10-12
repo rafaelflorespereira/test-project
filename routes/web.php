@@ -21,6 +21,7 @@ Route::post('/test-table', 'CSVFileController@storeFile')->name('storeFile');
 
 // Route for e-mail
 Route::get('send-mail/{subject}/{message}', function($subject, $message) {
+    // ADD specific e-mail
     Mail::to('scv@example.com')->send(new SubjectMessage($subject, $message));
     return redirect('/')->with(['email' => 'e-mail sent']);
 });

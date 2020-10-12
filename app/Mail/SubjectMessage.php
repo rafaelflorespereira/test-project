@@ -11,6 +11,7 @@ class SubjectMessage extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $mail = ['subject' => '','message' => ''];
     /**
      * Create a new message instance.
      *
@@ -18,8 +19,8 @@ class SubjectMessage extends Mailable
      */
     public function __construct($subject, $message)
     {
-        $this->subject = $subject;
-        $this->message = $message;
+        $this->mail['subject'] = $subject;
+        $this->mail['message'] = $message;
     }
 
     /**
@@ -30,11 +31,7 @@ class SubjectMessage extends Mailable
     public function build()
     {
         return $this->from('mail@example.com', 'CSV File Sender')
-        ->subject('CSV File') //this is where the subject must be
-        ->markdown('mails.subject-message')
-        ->with([
-            'subject' => $this->subject,
-            'message' => $this->message
-        ]); //This is where the message must go with.
+        ->subject('CSV File')
+        ->markdown('mails.subject-message');
     }
 }
