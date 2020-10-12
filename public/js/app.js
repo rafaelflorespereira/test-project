@@ -1982,6 +1982,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["subjects", "messages"],
   mounted: function mounted() {
@@ -38446,7 +38447,9 @@ var render = function() {
                             _c("tr", [
                               _c("th", [_vm._v("Subjects")]),
                               _vm._v(" "),
-                              _c("th", [_vm._v("Messages")])
+                              _c("th", [_vm._v("Messages")]),
+                              _vm._v(" "),
+                              _c("th", [_vm._v("Send Email")])
                             ])
                           ]),
                           _vm._v(" "),
