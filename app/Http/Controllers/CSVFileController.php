@@ -10,9 +10,10 @@ class CSVFileController extends Controller
      * Saves the file into store/app/myFiles
      */
     public function storeFile(Request $request) {
-        if(isset($request->file) or $request->message or $request->subject) {
+        
+        if($request->file('myFile') == null || $request->message == null || $request->subject == null) {
             return redirect('/')->with(['error' => 'Please, fill the form correctly']);
-        }
+        } 
         $filename = 'CSVFile'.time();
         $path = $request->file('myFile')->storeAs('myFiles', $filename);
         return self::readFile($filename, $request->subject, $request->message);
