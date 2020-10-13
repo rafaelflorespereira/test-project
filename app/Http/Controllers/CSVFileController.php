@@ -38,10 +38,10 @@ class CSVFileController extends Controller
         $emails = self::getEmails($rows, $headers[0]);
         $foundSubjects = self::getFieldsFromRows($subjects, $rows, $headers);
         $foundMessages = self::getFieldsFromRows($messages, $rows, $headers);
-        $contacts = self::getNonEmpty($foundSubjects, $foundMessages);
+        $contacts = self::getNonEmpty($foundSubjects, $foundMessages, $subjects, $messages);
         $data = [
             'emails' => $emails,
-            'contacts' => $contacts
+            'contacts' => $contacts,
         ];
         return view('table')->with($data);
     }
@@ -88,7 +88,7 @@ class CSVFileController extends Controller
      * @return string string[0] . $content . string[1]
      */
     public function putContentToTemplate($string, $content) {
-        implode(array(explode('{{', $string)[0], $content, explode('}}', $string)[1])); 
+        return implode(array(explode('{{', $string)[0], $content, explode('}}', $string)[1])); 
     }
     /**
      * Email field must be exactly like 'email'
@@ -104,22 +104,19 @@ class CSVFileController extends Controller
         }
         return $emails;
     }
-    /**
-     * Return 
-     */
-    public function getNonEmpty($subjects, $messages) {
+    public function getNonEmpty($subjects, $messages, $subjectAll, $messageAll) {
         $nonEmpty = [];
         foreach($subjects as $key => $subject) {
             foreach($subject as $k => $field) {
                 if($key == 0) {
                     array_push($nonEmpty,([
-                        'subject' => $field,
-                        'message' => $messages[$key][$k],
+                        'subject' => self::putContentToTemplate($subjectAll[$key], $field ),
+                        'message' => self::putContentToTemplate($messageAll[$key], $messages[$key][$k] ),
                     ]));
                 } 
                 elseif ( $nonEmpty[$k]['subject'] == '' || $nonEmpty[$k]['message'] == '') {
-                    $nonEmpty[$k]['subject'] = $field;
-                    $nonEmpty[$k]['message'] = $messages[$key][$k];
+                    $nonEmpty[$k]['subject'] = self::putContentToTemplate($subjectAll[$key], $field);
+                    $nonEmpty[$k]['message'] = self::putContentToTemplate($messageAll[$key], $messages[$key][$k]);
                 }
             }
         }
