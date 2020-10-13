@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 
@@ -10,7 +11,6 @@ class CSVFileController extends Controller
      * Saves the file into store/app/myFiles
      */
     public function storeFile(Request $request) {
-        
         if($request->file('myFile') == null || $request->message == null || $request->subject == null) {
             return redirect('/')->with(['error' => 'Please, fill the form correctly']);
         } 
@@ -32,22 +32,24 @@ class CSVFileController extends Controller
         //This can be refactored
         foreach($table as $key => $row){
             if($row != false) {
-                if($key == 0) {
-                    array_push($headers, $row);
-                } else {
-                    array_push($rows, $row);
-                }
-            } 
+                if($key == 0 ? array_push($headers, $row) : array_push($rows, $row));
+            }
         }
+        $emails = self::getEmails($rows, $headers[0]);
         $foundSubjects = self::getFieldsFromRows($subjects, $rows, $headers);
         $foundMessages = self::getFieldsFromRows($messages, $rows, $headers);
-        return view('table', ['subjects' => $foundSubjects], ['messages' => $foundMessages]);
+        $contacts = self::getNonEmpty($foundSubjects, $foundMessages);
+        $data = [
+            'emails' => $emails,
+            'contacts' => $contacts
+        ];
+        return view('table')->with($data);
     }
 
     /**
      * Find which Header the interpolated Strings matches,
      * then get the content from the row from the Header Index.
-     * Also, add the message back with the content from the CSV File.
+     *
      * @param array fields(Subjects and Messages)
      * @param array headers(CSV Header)
      * @param array rows(CSV content)
@@ -56,15 +58,16 @@ class CSVFileController extends Controller
      */
     public function getFieldsFromRows($fields, $rows, $headers) {
         $found = array();
-        //check if fields is array
         foreach($fields as $field){
             $foundEachField = array();
+            //take off $headers and input its index 0
             foreach($headers[0] as $keyHeader => $header) {
                 if(self::getHeaderFromString($field) == $header) {
                     foreach($rows as $keyRow => $row) {
                         foreach($row as $keyCol => $col) {
                             if($keyCol == $keyHeader) {
-                                array_push($foundEachField, self::putContentToTemplate($field, $col));
+                                array_push($foundEachField, $col);
+                                //array_push($foundEachField, self::putContentToTemplate($field, $col));
                             }
                         }
                     }
@@ -85,11 +88,41 @@ class CSVFileController extends Controller
      * @return string string[0] . $content . string[1]
      */
     public function putContentToTemplate($string, $content) {
-        return implode( array(explode('{{', $string)[0], $content, explode('}}', $string)[1])); 
+        implode(array(explode('{{', $string)[0], $content, explode('}}', $string)[1])); 
     }
     /**
-     * If template returns empty for its table fields,
-     * returns the previous template. 
+     * Email field must be exactly like 'email'
      */
-    public function findBlank() {}
+    public function getEmails($rows, $headers) {
+        $emails = array();
+        foreach($rows as $row){
+            foreach($row as $colHeader => $column) {
+                if($headers[$colHeader] == 'email') {
+                    array_push($emails, $column);
+                }
+            }
+        }
+        return $emails;
+    }
+    /**
+     * Return 
+     */
+    public function getNonEmpty($subjects, $messages) {
+        $nonEmpty = [];
+        foreach($subjects as $key => $subject) {
+            foreach($subject as $k => $field) {
+                if($key == 0) {
+                    array_push($nonEmpty,([
+                        'subject' => $field,
+                        'message' => $messages[$key][$k],
+                    ]));
+                } 
+                elseif ( $nonEmpty[$k]['subject'] == '' || $nonEmpty[$k]['message'] == '') {
+                    $nonEmpty[$k]['subject'] = $field;
+                    $nonEmpty[$k]['message'] = $messages[$key][$k];
+                }
+            }
+        }
+        return $nonEmpty;
+    }
 }

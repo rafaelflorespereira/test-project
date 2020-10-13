@@ -4,37 +4,41 @@
       <v-row justify="center">
         <v-col cols="12" md="10">
           <v-card
-          elevation="12">
+            elevation="12">
           <v-card-title> Table of Contents </v-card-title>
             <v-simple-table>
               <thead>
                 <tr>
                   <th>Subjects</th>
                   <th>Messages</th>
-                  <th>Send Email</th>
+                  <th>Send E-mail</th>
                 </tr>
               </thead>
-              <tbody v-for="(subject, index) in subjects">
-                <tr v-for="(item, i) in subject">
-                  <td>{{ item }}</td>
-                  <td>{{ messages[index][i] }}</td>
+              <tbody >
+                <tr v-for="(contact, index) in parsedContacts">
+                  <td>{{ contact.subject }}</td>
+                  <td>{{ contact.message }}</td>
                   <td>
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn 
-                        icon
-                        color="green"                
-                        v-on="on"
-                        v-bind="attrs" 
-                        @click="sendMail(item, messages[index][i])"
-                      >
-                        <v-icon>
-                          mdi-email-send-outline
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Forward e-mail</span>
-                  </v-tooltip>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn 
+                          icon
+                          color="green"                
+                          v-on="on"
+                          v-bind="attrs" 
+                          @click="
+                            sendMail(contact.subject, 
+                              contact.message, 
+                                parsedEmails[index])
+                          "
+                        >
+                          <v-icon>
+                            mdi-email-send-outline
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Send to {{ parsedEmails[index] }}</span>
+                    </v-tooltip>
                   </td>
                 </tr>
               </tbody>
@@ -48,20 +52,21 @@
 
 <script>
 export default {
-  props:["subjects", "messages"],
+  //get the content from subjects and messages
+  props:["contacts", "emails"],
     mounted(){
-    this.subjects = JSON.parse(this.subjects)
-    this.messages = JSON.parse(this.messages)
+    this.parsedContacts = JSON.parse(this.contacts)
+    this.parsedEmails   = JSON.parse(this.emails)
   },
   data:() => {
     return {
-      message: 'test-message',
-      subject: 'test-subject'
+      parsedContacts: [],
+      parsedEmails: [],
     }
   },
   methods: {
-    sendMail(subject, message) {
-      window.location.href = '/send-mail/'+subject+'/'+message
+    sendMail(subject, message, email) {
+      window.location.href = '/send-mail/'+subject+'/'+message+'/'+email
     }
   }
 }

@@ -1983,21 +1983,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["subjects", "messages"],
+  //get the content from subjects and messages
+  props: ["contacts", "emails"],
   mounted: function mounted() {
-    this.subjects = JSON.parse(this.subjects);
-    this.messages = JSON.parse(this.messages);
+    this.parsedContacts = JSON.parse(this.contacts);
+    this.parsedEmails = JSON.parse(this.emails);
   },
   data: function data() {
     return {
-      message: 'test-message',
-      subject: 'test-subject'
+      parsedContacts: [],
+      parsedEmails: []
     };
   },
   methods: {
-    sendMail: function sendMail(subject, message) {
-      window.location.href = '/send-mail/' + subject + '/' + message;
+    sendMail: function sendMail(subject, message, email) {
+      window.location.href = '/send-mail/' + subject + '/' + message + '/' + email;
     }
   }
 });
@@ -38440,106 +38445,104 @@ var render = function() {
                     [
                       _c("v-card-title", [_vm._v(" Table of Contents ")]),
                       _vm._v(" "),
-                      _c(
-                        "v-simple-table",
-                        [
-                          _c("thead", [
-                            _c("tr", [
-                              _c("th", [_vm._v("Subjects")]),
+                      _c("v-simple-table", [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", [_vm._v("Subjects")]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v("Messages")]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v("Send E-mail")])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.parsedContacts, function(contact, index) {
+                            return _c("tr", [
+                              _c("td", [_vm._v(_vm._s(contact.subject))]),
                               _vm._v(" "),
-                              _c("th", [_vm._v("Messages")]),
+                              _c("td", [_vm._v(_vm._s(contact.message))]),
                               _vm._v(" "),
-                              _c("th", [_vm._v("Send Email")])
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _vm._l(_vm.subjects, function(subject, index) {
-                            return _c(
-                              "tbody",
-                              _vm._l(subject, function(item, i) {
-                                return _c("tr", [
-                                  _c("td", [_vm._v(_vm._s(item))]),
-                                  _vm._v(" "),
-                                  _c("td", [
-                                    _vm._v(_vm._s(_vm.messages[index][i]))
-                                  ]),
-                                  _vm._v(" "),
+                              _c(
+                                "td",
+                                [
                                   _c(
-                                    "td",
-                                    [
-                                      _c(
-                                        "v-tooltip",
-                                        {
-                                          attrs: { bottom: "" },
-                                          scopedSlots: _vm._u(
-                                            [
-                                              {
-                                                key: "activator",
-                                                fn: function(ref) {
-                                                  var on = ref.on
-                                                  var attrs = ref.attrs
-                                                  return [
-                                                    _c(
-                                                      "v-btn",
-                                                      _vm._g(
-                                                        _vm._b(
-                                                          {
-                                                            attrs: {
-                                                              icon: "",
-                                                              color: "green"
-                                                            },
-                                                            on: {
-                                                              click: function(
-                                                                $event
-                                                              ) {
-                                                                return _vm.sendMail(
-                                                                  item,
-                                                                  _vm.messages[
-                                                                    index
-                                                                  ][i]
-                                                                )
-                                                              }
-                                                            }
-                                                          },
-                                                          "v-btn",
-                                                          attrs,
-                                                          false
-                                                        ),
-                                                        on
-                                                      ),
-                                                      [
-                                                        _c("v-icon", [
-                                                          _vm._v(
-                                                            "\n                        mdi-email-send-outline\n                      "
-                                                          )
-                                                        ])
-                                                      ],
-                                                      1
-                                                    )
-                                                  ]
-                                                }
-                                              }
-                                            ],
-                                            null,
-                                            true
-                                          )
-                                        },
+                                    "v-tooltip",
+                                    {
+                                      attrs: { bottom: "" },
+                                      scopedSlots: _vm._u(
                                         [
-                                          _vm._v(" "),
-                                          _c("span", [_vm._v("Forward e-mail")])
-                                        ]
+                                          {
+                                            key: "activator",
+                                            fn: function(ref) {
+                                              var on = ref.on
+                                              var attrs = ref.attrs
+                                              return [
+                                                _c(
+                                                  "v-btn",
+                                                  _vm._g(
+                                                    _vm._b(
+                                                      {
+                                                        attrs: {
+                                                          icon: "",
+                                                          color: "green"
+                                                        },
+                                                        on: {
+                                                          click: function(
+                                                            $event
+                                                          ) {
+                                                            return _vm.sendMail(
+                                                              contact.subject,
+                                                              contact.message,
+                                                              _vm.parsedEmails[
+                                                                index
+                                                              ]
+                                                            )
+                                                          }
+                                                        }
+                                                      },
+                                                      "v-btn",
+                                                      attrs,
+                                                      false
+                                                    ),
+                                                    on
+                                                  ),
+                                                  [
+                                                    _c("v-icon", [
+                                                      _vm._v(
+                                                        "\n                          mdi-email-send-outline\n                        "
+                                                      )
+                                                    ])
+                                                  ],
+                                                  1
+                                                )
+                                              ]
+                                            }
+                                          }
+                                        ],
+                                        null,
+                                        true
                                       )
-                                    ],
-                                    1
+                                    },
+                                    [
+                                      _vm._v(" "),
+                                      _c("span", [
+                                        _vm._v(
+                                          "Send to " +
+                                            _vm._s(_vm.parsedEmails[index])
+                                        )
+                                      ])
+                                    ]
                                   )
-                                ])
-                              }),
-                              0
-                            )
-                          })
-                        ],
-                        2
-                      )
+                                ],
+                                1
+                              )
+                            ])
+                          }),
+                          0
+                        )
+                      ])
                     ],
                     1
                   )

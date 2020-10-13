@@ -1,8 +1,9 @@
 @extends('main')
 
 @section('content')
+
     <table-contents
-        subjects="{{json_encode($subjects)}}"
-        messages="{{json_encode($messages)}}"
+        contacts="{{json_encode($contacts)}}"
+        emails="{{ json_encode($emails) }}"
     ></table-contents>
 @endsection
