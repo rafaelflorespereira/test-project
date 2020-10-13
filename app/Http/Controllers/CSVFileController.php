@@ -18,7 +18,7 @@ class CSVFileController extends Controller
         $path = $request->file('myFile')->storeAs('myFiles', $filename);
         return self::readFile($filename, $request->subject, $request->message);
     }
- 
+    
     public function readFile($filename, $subjects, $messages)
     {
         $file = fopen('../storage/app/myFiles/'.$filename,'r');
@@ -38,7 +38,8 @@ class CSVFileController extends Controller
         $emails = self::getEmails($rows, $headers[0]);
         $foundSubjects = self::getFieldsFromRows($subjects, $rows, $headers);
         $foundMessages = self::getFieldsFromRows($messages, $rows, $headers);
-        $contacts = self::getNonEmpty($foundSubjects, $foundSubjects, $subjects, $messages);
+        dd($foundMessages);
+        $contacts = self::getNonEmpty($foundSubjects, $foundMessages, $subjects, $messages);
         $data = [
             'emails' => $emails,
             'contacts' => $contacts,

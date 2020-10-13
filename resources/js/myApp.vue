@@ -104,6 +104,13 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <v-snackbar
+        v-model="snackbar"
+      >
+        E-mail sent
+        <v-btn flat color="primary" @click.native="snackbar = false">Close</v-btn>
+      </v-snackbar>
     </v-container>
   </v-app>
 </template>
@@ -113,7 +120,7 @@ import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import template from './components/TemplateComponent.vue'
   export default {
-    props: ['error'],
+    props: ['error', 'email'],
     mixins: [validationMixin],
     validations: {
       file: {required}
@@ -128,7 +135,8 @@ import template from './components/TemplateComponent.vue'
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       valid: true,
       file: null,
-      dialog: false
+      dialog: false,
+      snackbar: false
     }),
     computed: {
       fileErrors() {
@@ -153,6 +161,7 @@ import template from './components/TemplateComponent.vue'
     },
     created() {
       if(this.error) this.dialog = true
+      if(this.email) this.snackbar = true 
     }
   }
 </script>

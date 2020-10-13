@@ -2175,11 +2175,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['error'],
+  props: ['error', 'email'],
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
   validations: {
     file: {
@@ -2197,7 +2204,8 @@ __webpack_require__.r(__webpack_exports__);
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       valid: true,
       file: null,
-      dialog: false
+      dialog: false,
+      snackbar: false
     };
   },
   computed: {
@@ -2223,6 +2231,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     if (this.error) this.dialog = true;
+    if (this.email) this.snackbar = true;
   }
 });
 
@@ -38921,6 +38930,35 @@ var render = function() {
                   )
                 ],
                 1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-snackbar",
+            {
+              model: {
+                value: _vm.snackbar,
+                callback: function($$v) {
+                  _vm.snackbar = $$v
+                },
+                expression: "snackbar"
+              }
+            },
+            [
+              _vm._v("\n      E-mail sent\n      "),
+              _c(
+                "v-btn",
+                {
+                  attrs: { flat: "", color: "primary" },
+                  nativeOn: {
+                    click: function($event) {
+                      _vm.snackbar = false
+                    }
+                  }
+                },
+                [_vm._v("Close")]
               )
             ],
             1
@@ -97189,8 +97227,8 @@ var opts = {};
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\rafae\Desktop\rabbit-test\test-project\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\rafae\Desktop\rabbit-test\test-project\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\rafael.flores\Desktop\vue_training\webpack\test-project\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\rafael.flores\Desktop\vue_training\webpack\test-project\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
