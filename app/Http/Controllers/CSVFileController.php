@@ -38,7 +38,7 @@ class CSVFileController extends Controller
         $emails = self::getEmails($rows, $headers[0]);
         $foundSubjects = self::getFieldsFromRows($subjects, $rows, $headers);
         $foundMessages = self::getFieldsFromRows($messages, $rows, $headers);
-        $contacts = self::getNonEmpty($foundSubjects, $foundMessages, $subjects, $messages);
+        $contacts = self::getNonEmpty($foundSubjects, $foundSubjects, $subjects, $messages);
         $data = [
             'emails' => $emails,
             'contacts' => $contacts,
@@ -104,19 +104,19 @@ class CSVFileController extends Controller
         }
         return $emails;
     }
-    public function getNonEmpty($subjects, $messages, $subjectAll, $messageAll) {
+    public function getNonEmpty($subjects, $messages, $subjectsText, $messagesText) {
         $nonEmpty = [];
         foreach($subjects as $key => $subject) {
             foreach($subject as $k => $field) {
                 if($key == 0) {
                     array_push($nonEmpty,([
-                        'subject' => self::putContentToTemplate($subjectAll[$key], $field ),
-                        'message' => self::putContentToTemplate($messageAll[$key], $messages[$key][$k] ),
+                        'subject' => self::putContentToTemplate($subjectsText[$key], $field ),
+                        'message' => self::putContentToTemplate($messagesText[$key], $messages[$key][$k] ),
                     ]));
                 } 
                 elseif ( $nonEmpty[$k]['subject'] == '' || $nonEmpty[$k]['message'] == '') {
-                    $nonEmpty[$k]['subject'] = self::putContentToTemplate($subjectAll[$key], $field);
-                    $nonEmpty[$k]['message'] = self::putContentToTemplate($messageAll[$key], $messages[$key][$k]);
+                    $nonEmpty[$k]['subject'] = self::putContentToTemplate($subjectsText[$key], $field);
+                    $nonEmpty[$k]['message'] = self::putContentToTemplate($messagesText[$key], $messages[$key][$k]);
                 }
             }
         }
