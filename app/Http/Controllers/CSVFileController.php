@@ -16,7 +16,7 @@ class CSVFileController extends Controller
         } 
         $filename = 'CSVFile'.time();
         $path = $request->file('myFile')->storeAs('myFiles', $filename);
-        return self::readFile($filename, $request->subject, $request->message);
+        return $this->readFile($filename, $request->subject, $request->message);
     }
     
     public function readFile($filename, $subjects, $messages)
@@ -29,16 +29,17 @@ class CSVFileController extends Controller
         fclose($file);
         $headers = array();
         $rows = array();
-        //This can be refactored
         foreach($table as $key => $row){
             if($row != false) {
                 if($key == 0 ? array_push($headers, $row) : array_push($rows, $row));
             }
         }
-        $emails = self::getEmails($rows, $headers[0]);
-        $foundSubjects = self::getFieldsFromRows($subjects, $rows, $headers);
-        $foundMessages = self::getFieldsFromRows($messages, $rows, $headers);
-        $contacts = self::getNonEmpty($foundSubjects, $foundMessages, $subjects, $messages);
+        $dictionary = $this->createDictionary($table);
+
+        $emails = $this->getEmails($rows, $headers[0]);
+        $foundSubjects = $this->getFieldsFromRows($subjects, $rows, $headers);
+        $foundMessages = $this->getFieldsFromRows($messages, $rows, $headers);
+        $contacts = $this->getNonEmpty($foundSubjects, $foundMessages, $subjects, $messages);
         $data = [
             'emails' => $emails,
             'contacts' => $contacts,
@@ -62,12 +63,12 @@ class CSVFileController extends Controller
             $foundEachField = array();
             //take off $headers and input its index 0
             foreach($headers[0] as $keyHeader => $header) {
-                if(self::getHeaderFromString($field) == $header) {
+                if($this->getHeaderFromString($field) == $header) {
                     foreach($rows as $keyRow => $row) {
                         foreach($row as $keyCol => $col) {
                             if($keyCol == $keyHeader) {
                                 array_push($foundEachField, $col);
-                                //array_push($foundEachField, self::putContentToTemplate($field, $col));
+                                //array_push($foundEachField, $this->putContentToTemplate($field, $col));
                             }
                         }
                     }
@@ -82,6 +83,7 @@ class CSVFileController extends Controller
      * @return string 
      */
     public function getHeaderFromString($string) {
+        $headers = [];
         return trim(explode('}}', explode('{{', $string)[1])[0]);
     }
     /**
@@ -104,22 +106,45 @@ class CSVFileController extends Controller
         }
         return $emails;
     }
+    //THIS NEEDS TO BE REFACTORED
     public function getNonEmpty($subjects, $messages, $subjectsText, $messagesText) {
         $nonEmpty = [];
         foreach($subjects as $key => $subject) {
             foreach($subject as $k => $field) {
                 if($key == 0) {
                     array_push($nonEmpty,([
-                        'subject' => self::putContentToTemplate($subjectsText[$key], $field ),
-                        'message' => self::putContentToTemplate($messagesText[$key], $messages[$key][$k] ),
+                        'subject' => $this->putContentToTemplate($subjectsText[$key], $field ),
+                        'message' => $this->putContentToTemplate($messagesText[$key], $messages[$key][$k] ),
                     ]));
                 } 
                 elseif ( $nonEmpty[$k]['subject'] == '' || $nonEmpty[$k]['message'] == '') {
-                    $nonEmpty[$k]['subject'] = self::putContentToTemplate($subjectsText[$key], $field);
-                    $nonEmpty[$k]['message'] = self::putContentToTemplate($messagesText[$key], $messages[$key][$k]);
+                    $nonEmpty[$k]['subject'] = $this->putContentToTemplate($subjectsText[$key], $field);
+                    $nonEmpty[$k]['message'] = $this->putContentToTemplate($messagesText[$key], $messages[$key][$k]);
                 }
             }
         }
         return $nonEmpty;
+    }
+
+    /**
+     * @return Array Dictionary
+     */
+    public function createDictionary($table) {
+        $headers = array();
+        $rows = array();
+        foreach($table as $key => $row){
+            if($row != false) {
+                if($key == 0 ? array_push($headers, $row) : array_push($rows, $row));
+            }
+        }
+        $dictionary = [];
+        foreach($rows as $key => $row) {
+            $contact = [];
+            foreach ($row as $k => $col) {
+                array_push($contact, [ $headers[0][$k] => $col ?? '' ]);
+            }
+            array_push($dictionary, $contact);
+        }
+        return $dictionary;
     }
 }
