@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class CSVFileController extends Controller
 {
@@ -51,17 +51,25 @@ class CSVFileController extends Controller
 
         $subjectText = $this->getTextFromString($subjects[0]);
         $messageText = $this->getTextFromString($messages[0]);
-
-        $subjectSentence = $this->concatenateContentWithText($subjectContent, $subjectText);
-        $messageSentence = $this->concatenateContentWithText($messageContent, $messageText);
-
+    
+        $validContent = $this->getValid($subjectContent, $messageContent);
+        $subjectSentence = array();
+        foreach($validContent as $content) {
+          array_push($subjectSentence, $this->concatenateContentWithText($content[0], $subjectText));
+        }
+    
+        $messageSentence = array();
+        foreach($validContent as $content) { 
+          array_push($messageSentence, $this->concatenateContentWithText($content[1], $messageText));
+        }
         //Todos Refactor
         $contacts = [];
-        foreach($subjectSentence as $key => $subject)
+        foreach($subjectSentence as $key => $subject) {
           array_push($contacts, [
             'subject' => $subject,
             'message' => $messageSentence[$key]
           ]);
+        }
 
         $emails = $this->getEmails($rows, $headers[0]);
        
@@ -114,40 +122,41 @@ class CSVFileController extends Controller
       return $dictionary;
     }
     public function getHeaderContent($dictionary, $headers){
-      $content = [];
-      // Going through all elements of the contacts
-      foreach($dictionary as $contact) {
-        $each = [];
-        foreach($contact as $element) {
-          //Comparing each input header with the element's headers
-          foreach($headers as $key => $header) {
-            foreach($header as $head) {
-              if($head == key($element)){
-                //!! IF ELEMENT IS NOT PRESENT DO NOT PASS...
-                //!! IF ELEMENT IS NOT PRESENT DO NOT PASS...
-                $content[] = $element;
+      return collect($dictionary)->map( function($contact) use ($headers){
+        return collect($headers)->map( function($header) use ($contact) {
+          return collect($header)->map( function ($head) use ($contact) {
+            return (collect($contact)->filter( function($contactField) use ($head){
+              if(key($contactField) == $head) {
+                return $contactField;
               }
-            }
+            }));
+          })->flatten();
+        });
+      })->toArray();
+    }
+
+    public function getValid($subjects, $messages) {
+      $valids = array();
+
+      for ($i=0; $i < count($subjects); $i++) {
+        $test = array();
+        foreach($subjects[$i] as $key => $subject) {
+          //! IF there is NOT blank in either the subjects or messages at the same time.
+          if(!in_array("", $subject, true) || !in_array("", $messages[$i][$key], true) || $key === count($subjects[$i]) - 1){
+            array_push($test, [$subject,  $messages[$i][$key]]);
           }
         }
-        if(!empty($each)) {
-          $content[] = $each;
-        }
+        array_push($valids, last($test));
       }
-      dd($content);
-      return $content;
+      return $valids;
     }
 
     public function concatenateContentWithText($contents, $text) {
-      $wholeText = [];
-      foreach($contents as $content) {
-        $sentence = [];
-        foreach($content as $key => $field) {
-          array_push($sentence, $text[0][$key] . array_values($field)[0]);
-        }
-        array_push($wholeText, implode($sentence));
+      $sentence = [];
+      foreach($contents as $key => $field) {
+        array_push($sentence, $text[0][$key] . $field);
       }
-      return $wholeText;
+      return implode($sentence);
     }
 
     //!IS NOT BEING USED
